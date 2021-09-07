@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Diagnostics;
+using System.Windows.Controls.Primitives;
 
 namespace HTML_Russian
 {
@@ -14,7 +17,7 @@ namespace HTML_Russian
     {
         public List<string> Rail_of_Curtain = new List<string>();
         public List<string> Gulag = new List<string>();
-        public string WebSite = "\\new webpage.html";
+        public string WebSite = "\\new_webpage.html";
         List<IronCurtain> ironcurtain = new List<IronCurtain>();
         public class IronCurtain
         {
@@ -150,8 +153,9 @@ namespace HTML_Russian
                     Rail_of_Curtain.Add(x.Text);
             }
             Translate_Text();
+            Propaganda();
             string path = Environment.CurrentDirectory + WebSite;
-            Process.Start("IExplore.exe", path);
+            Process.Start("msedge.exe", path);
         }
         private void Translate_Text()
         {
@@ -189,6 +193,27 @@ namespace HTML_Russian
                     {
                         Gulag.Add("</body>");
                     }
+                    else if (Rail[way] == "<п>")
+                    {
+                        int countryroad = -1;
+                        for (int road = way + 1; road < Rail.Length; road++)
+                        {
+                            if (Rail[road] == "</п>")
+                            {
+                                countryroad = road;
+                                break;
+                            }
+                        }
+                        if (countryroad > way && countryroad < Rail.Length)
+                        {
+                            Gulag.Add("<p>");
+                            for (int road = way + 1; road < countryroad; road++)
+                            {
+                                Gulag.Add(Rail[road]);
+                            }
+                            Gulag.Add("</p>");
+                        }
+                    }
                     else if (Rail[way] == "<мета")
                     {
                         Gulag.Add("<meta ");
@@ -208,10 +233,10 @@ namespace HTML_Russian
                                 break;
                             }
                         }
-                        if (countryroad > -1)
+                        if (countryroad > way && countryroad < Rail.Length)
                         {
                             Gulag.Add("<title>");
-                            for (int road = way + 1; road < countryroad - 1; road++)
+                            for (int road = way + 1; road < countryroad; road++)
                             {
                                 Gulag.Add(Rail[road]);
                             }
@@ -221,42 +246,39 @@ namespace HTML_Russian
                 }
             }
         }
-        #region Row
-        private void Delete_Row(object sender, MouseButtonEventArgs e)
+        private void Propaganda()
         {
-            if (DeleteRow(e) != null)
+            using (StreamWriter dictatorship_of_proletariat = new StreamWriter("new_webpage.html"))
+            {
+                Gulag.ForEach(delegate (string penal_colony)
+                    {
+                        dictatorship_of_proletariat.Write(penal_colony);
+                        dictatorship_of_proletariat.WriteLine();
+                    });
+            }
+        }
+            #region Row
+            private void Delete_Row(object sender, MouseButtonEventArgs e)
+        {
+            ironcurtain = DeleteRow(e);
             Iron_curtain.ItemsSource = DeleteRow(e);
         }
         private List<IronCurtain> DeleteRow(MouseButtonEventArgs e)
         {
-            int LineNum = -1;
-            string LineNumText = (e.OriginalSource as FrameworkElement).DataContext.ToString();
-            ironcurtain = new List<IronCurtain>();
             if ((e.OriginalSource as FrameworkElement).DataContext != null)
             {
-                LineNumText = (e.OriginalSource as FrameworkElement).DataContext.ToString();
-                if (int.TryParse(LineNumText, out LineNum) && LineNum != -1)
+                string LineNumText = (e.OriginalSource as FrameworkElement).DataContext.ToString();
+
+                List<IronCurtain> ironcurtain_man = new List<IronCurtain>();
+                for (int rail = 0; rail < ironcurtain.Count; rail++)
                 {
-                    int Items_Counts = Iron_curtain.Items.Count - 1;
-                    for (int line_input = 0; line_input < Items_Counts; line_input++)
+                    if ((rail + 1).ToString() != LineNumText)
                     {
-                        string NewText = "";
-                        if (Iron_curtain.Columns[0].GetCellContent(Iron_curtain.Items[line_input]) != null)
-                        {
-                            NewText = (Iron_curtain.Columns[0].GetCellContent(Iron_curtain.Items[line_input]) as TextBlock).Text;
-                            if (line_input != LineNum - 1)
-                            {
-                                ironcurtain.Add(new IronCurtain()
-                                {
-                                    LineCode = NewText
-                                });
-                            }
-                        }
+                        ironcurtain_man.Add(ironcurtain[rail]);
                     }
-                    return ironcurtain;
                 }
-                else
-                    return null;
+                ironcurtain = ironcurtain_man;
+                return ironcurtain;
             }
             else
                 return null;
@@ -264,41 +286,25 @@ namespace HTML_Russian
 
         private void Create_New_Row(object sender, MouseButtonEventArgs e)
         {
-            if (CreateRow(e) != null)
-            Iron_curtain.ItemsSource = CreateRow(e);            
+            ironcurtain = CreateRow(e);
+            Iron_curtain.ItemsSource = ironcurtain;
         }
         private List<IronCurtain> CreateRow(MouseButtonEventArgs e)
         {
-            int LineNum = -1;
-            string LineNumText = "";
-            ironcurtain = new List<IronCurtain>();
-            if ((e.OriginalSource as FrameworkElement).DataContext != null)
+            if (e.OriginalSource is FrameworkElement shelter)
             {
-                LineNumText = (e.OriginalSource as FrameworkElement).DataContext.ToString();
-                if (int.TryParse(LineNumText, out LineNum) && LineNum != -1)
+                List<IronCurtain> ironcurtain_man = new List<IronCurtain>();
+                for (int rail = 0; rail < ironcurtain.Count; rail++)
                 {
-                    int Items_Counts = Iron_curtain.Items.Count - 1;
-                    for (int line_input = 0; line_input < Items_Counts; line_input++)
+                    ironcurtain_man.Add(ironcurtain[rail]);
+                    if ((rail + 1).ToString() == shelter.DataContext.ToString())
                     {
-                        string NewText = "";
-                        if ((Iron_curtain.Columns[0].GetCellContent(Iron_curtain.Items[line_input])) != null)
-                            NewText = (Iron_curtain.Columns[0].GetCellContent(Iron_curtain.Items[line_input]) as TextBlock).Text;
-                        ironcurtain.Add(new IronCurtain()
-                        {
-                            LineCode = NewText
-                        });
-                        if (line_input == LineNum - 1)
-                        {
-                            ironcurtain.Add(new IronCurtain()
-                            {
-                                LineCode = " "
-                            });
-                        }
+                        IronCurtain new_ironcurtain = new IronCurtain();
+                        ironcurtain_man.Add(new_ironcurtain);
                     }
-                    return ironcurtain;
                 }
-                else
-                    return null;
+                ironcurtain = ironcurtain_man;
+                return ironcurtain;
             }
             else
                 return null;
