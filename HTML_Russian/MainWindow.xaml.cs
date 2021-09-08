@@ -173,10 +173,6 @@ namespace HTML_Russian
                     {
                         Gulag.Add("<html>");
                     }
-                    else if (Rail[way] == "</нтмг>")
-                    {
-                        Gulag.Add("</html>");
-                    }
                     else if (Rail[way] == "<голова>")
                     {
                         Gulag.Add("<head>");
@@ -193,6 +189,7 @@ namespace HTML_Russian
                     {
                         Gulag.Add("</body>");
                     }
+                    //section
                     else if (Rail[way] == "<п>")
                     {
                         int countryroad = -1;
@@ -222,6 +219,7 @@ namespace HTML_Russian
                             Gulag.Add("charset=\"utf-8\">");
                         }
                     }
+                    //heading
                     else if (Rail[way] == "<заглавие>")
                     {
                         int countryroad = -1;
@@ -242,6 +240,138 @@ namespace HTML_Russian
                             }
                             Gulag.Add("</title>");
                         }
+                    }
+                    //title
+                    else if (Rail[way] == "<х1>")
+                    {
+                        int countryroad = -1;
+                        for (int road = way + 1; road < Rail.Length; road++)
+                        {
+                            if (Rail[road] == "</х1>")
+                            {
+                                countryroad = road;
+                                break;
+                            }
+                        }
+                        if (countryroad > way && countryroad < Rail.Length)
+                        {
+                            Gulag.Add("<h1>");
+                            for (int road = way + 1; road < countryroad; road++)
+                            {
+                                Gulag.Add(Rail[road]);
+                            }
+                            Gulag.Add("</h1>");
+                        }
+                    }
+                    else if (Rail[way] == "<х2>")
+                    {
+                        int countryroad = -1;
+                        for (int road = way + 1; road < Rail.Length; road++)
+                        {
+                            if (Rail[road] == "</х2>")
+                            {
+                                countryroad = road;
+                                break;
+                            }
+                        }
+                        if (countryroad > way && countryroad < Rail.Length)
+                        {
+                            Gulag.Add("<h2>");
+                            for (int road = way + 1; road < countryroad; road++)
+                            {
+                                Gulag.Add(Rail[road]);
+                            }
+                            Gulag.Add("</h2>");
+                        }
+                    }
+                    else if (Rail[way] == "<х3>")
+                    {
+                        int countryroad = -1;
+                        for (int road = way + 1; road < Rail.Length; road++)
+                        {
+                            if (Rail[road] == "</х3>")
+                            {
+                                countryroad = road;
+                                break;
+                            }
+                        }
+                        if (countryroad > way && countryroad < Rail.Length)
+                        {
+                            Gulag.Add("<h3>");
+                            for (int road = way + 1; road < countryroad; road++)
+                            {
+                                Gulag.Add(Rail[road]);
+                            }
+                            Gulag.Add("</h3>");
+                        }
+                    }
+                    else if (Rail[way] == "<х4>")
+                    {
+                        int countryroad = -1;
+                        for (int road = way + 1; road < Rail.Length; road++)
+                        {
+                            if (Rail[road] == "</х4>")
+                            {
+                                countryroad = road;
+                                break;
+                            }
+                        }
+                        if (countryroad > way && countryroad < Rail.Length)
+                        {
+                            Gulag.Add("<h4>");
+                            for (int road = way + 1; road < countryroad; road++)
+                            {
+                                Gulag.Add(Rail[road]);
+                            }
+                            Gulag.Add("</h4>");
+                        }
+                    }
+                    else if (Rail[way] == "<х5>")
+                    {
+                        int countryroad = -1;
+                        for (int road = way + 1; road < Rail.Length; road++)
+                        {
+                            if (Rail[road] == "</х5>")
+                            {
+                                countryroad = road;
+                                break;
+                            }
+                        }
+                        if (countryroad > way && countryroad < Rail.Length)
+                        {
+                            Gulag.Add("<h5>");
+                            for (int road = way + 1; road < countryroad; road++)
+                            {
+                                Gulag.Add(Rail[road]);
+                            }
+                            Gulag.Add("</h5>");
+                        }
+                    }
+                    else if (Rail[way] == "<х6>")
+                    {
+                        int countryroad = -1;
+                        for (int road = way + 1; road < Rail.Length; road++)
+                        {
+                            if (Rail[road] == "</х6>")
+                            {
+                                countryroad = road;
+                                break;
+                            }
+                        }
+                        if (countryroad > way && countryroad < Rail.Length)
+                        {
+                            Gulag.Add("<h6>");
+                            for (int road = way + 1; road < countryroad; road++)
+                            {
+                                Gulag.Add(Rail[road]);
+                            }
+                            Gulag.Add("</h6>");
+                        }
+                    }
+                    //horizontal line
+                    else if (Rail[way] == "<хр>")
+                    {
+                        Gulag.Add("<hr>");
                     }
                 }
             }
@@ -281,7 +411,9 @@ namespace HTML_Russian
                 return ironcurtain;
             }
             else
+            {
                 return null;
+            }
         }
 
         private void Create_New_Row(object sender, MouseButtonEventArgs e)
